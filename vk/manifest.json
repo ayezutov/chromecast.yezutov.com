@@ -1,0 +1,17 @@
+{
+  "name": "VkCast",
+  "manifest_version": 2,
+  "version": "0.1",
+  "description": "Enables videos from VK to be played in Google Chromecast",
+  "icons": { "128": "icons/vkcast-128.png" },
+  "permissions": ["webRequest", "http://*.vk.com/"],
+  "background": {
+    "scripts": ["scripts/vk-cast-background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*.vk.com/*"],
+      "js": ["scripts/vk-cast-inject.js"]
+    }],
+  "web_accessible_resources" : ["icons/chromecast-icon.png"]
+}
