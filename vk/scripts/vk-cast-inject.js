@@ -1,4 +1,10 @@
-(function(){
+(function () {
+
+    var resources = {
+        iconGrey: chrome.extension.getURL("icons/vkcast-icon-grey.png"),
+        iconWhite: chrome.extension.getURL("icons/vkcast-icon-white.png"),
+    }
+
 	chrome.runtime.onMessage.addListener(
 	  function(request, sender, sendResponse) {
 		if (request.action == "recreateAllChromeCastIcons"){
@@ -80,8 +86,10 @@
 	
 	var getVideoInformationFromEmbedded = function (embedded) {
 	    console.log("[VkCast] Getting information from embed's flashvars");
+
 	    var flashArgs = embedded.attributes["flashvars"].value;
 	    var pairs = flashArgs.split('&');
+
 
 	    var result = {};
 	    for (var i = 0; i < pairs.length; i++) {
@@ -98,11 +106,28 @@
 	    console.log("[VkCast] Inserting VkCast controls");
 	    var tempDiv = document.createElement("div");
 
-	    tempDiv.innerHTML = '<div class="divider fl_r">|</div> <div class="mv_top_button fl_r" style="color: rgb(119, 119, 119);"><img src="' + chrome.extension.getURL("icons/chromecast-icon.png") + '" alt="VkCast"/></div>';
+	    tempDiv.innerHTML = '<div class="divider fl_r">|</div> <div class="mv_top_button fl_r vkCastButton" style="color: rgb(119, 119, 119);"><img onmouseover="this.src=\'' + resources.iconWhite + '\'" onmouseout="this.src=\'' + resources.iconGrey + '\'" src="' + resources.iconGrey + '" alt="VkCast"/></div>';
 
 	    var children = Array.prototype.slice.call(tempDiv.children);
 	    for (var i = 0; i < children.length; i++) {
-	        topControls.appendChild(children[i]);
+	        var child = children[i];
+	        if (!!(child.className) && child.className.indexOf("vkCastButton") >= 0) {
+	            child.addEventListener("click", function () {
+
+	                var qs = "";
+	                for (prop in info) {
+	                    if (/^url\d+$/.test(prop)) {
+	                        var prefix = qs == "" ? "?" : "&";
+	                        qs = qs + prefix + prop + "=" + encodeURIComponent(info[prop]);
+	                    }
+	                }
+
+	                var url = "http://local.chromecast.yezutov.com/qa/vk/sender.html" + qs;
+	                //alert(url);
+	                chrome.extension.sendRequest({ command: "openChromeCastSender", parameters: { url: url } });
+	            });
+	        }
+	        topControls.appendChild(child);
 	    }
 	};
 })();

@@ -14,4 +14,10 @@
 	}
 
 	registerRules();
+
+	chrome.extension.onRequest.addListener(function(request, sender) { 
+	    if (request.command == "openChromeCastSender") { 
+	        chrome.tabs.create({ url: request.parameters.url });
+	    } 
+	});
 })();
