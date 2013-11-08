@@ -1,0 +1,44 @@
+body
+{
+    background-color: #000000;
+    color: #dddddd;
+    margin: 0;
+}
+
+
+#video-simulation
+{
+    height: 480px;
+    width: 640px;
+
+    background-color: #333333;
+    background-image: url('../images/background.png');
+
+    display: inline-block;
+}
+
+header
+{
+    height: 5%;
+}
+
+div.content
+{
+    text-align: center;
+    display: table;
+    position: absolute;
+    height: 95%;
+    width: 100%;
+}
+
+div.content2
+{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+div.content3
+{        
+    margin-left: auto;
+    margin-right: auto;
+}
