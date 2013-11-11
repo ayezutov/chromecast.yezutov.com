@@ -1,7 +1,11 @@
 <html data-cast-api-enabled="true">
 <head>
     <script src="scripts/jquery-1.9.1.js"></script>
+    <script src="scripts/jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="scripts/cast.player.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/jqueryui/jquery-ui.min.css" />
     <link rel="stylesheet" type="text/css" href="css/vkcast.css" />
+    <link rel="SHORTCUT ICON" href="favicon.ico" />
 
     <script>
         var cast_api, cv_activity;
@@ -73,15 +77,36 @@
             <div class="content3">
                 <div id="video-area">
                     <div id="video-simulation">
+                        <video id="html5player" poster="http://corrupt-system.de/assets/media/sintel/sintel-trailer.jpg" controls preload="none" style="width: 400px; height: 228px;">
+        <source src="http://corrupt-system.de/assets/media/sintel/sintel-trailer.m4v" type="video/mp4" />
+        <source src="http://corrupt-system.de/assets/media/sintel/sintel-trailer.webm" type="video/webm" />
+    </video>
+                    </div>
+                    <div class="controls">
+                        <div role="progressbar" id="progressbar">
+                            <div role="progressbar" id="progressbar-preloaded"></div>
+                            <div role="progressbar" id="progressbar-playing"></div>
+                        </div>
+                        <div role="button" id="play"></div>
+                        <div role="button" id="pause"></div>
+                        
+                        <div role="button" id="quality"></div>
+                        <div id="volume">
+                            <div role="button" id="volume-icon"></div>
+                            <div role="slider" id="volume-slider"></div>
+                        </div>  
+                        <div role="status" id="time">
+                            <div id="time-stats">
+                                <div id="time-current">&nbsp;</div>
+                                <div id="time-remaining">&nbsp;</div>
+                            </div>
+                            <div id="time-delimiter">/</div>
+                            <div id="time-total">&nbsp;</div>                            
+                        </div>                      
                     </div>
                 </div>
 
-                <div class="controls">
-                    <button id="play"></button>
-                    <button id="pause"></button>
-                    <div id="volume"></div>
-                    <div id="quality"></div>
-                </div>
+
             </div>
         </div>
     </div>

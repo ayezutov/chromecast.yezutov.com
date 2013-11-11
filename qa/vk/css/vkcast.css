@@ -8,12 +8,10 @@ body
 
 #video-simulation
 {
-    height: 480px;
-    width: 640px;
+    height: 320px;
+    width: 550px;
 
-    background-color: #333333;
-    background-image: url('../images/background.png');
-
+   /* background: #333333 url('../images/background.png') center;*/
     display: inline-block;
 }
 
@@ -41,4 +39,158 @@ div.content3
 {        
     margin-left: auto;
     margin-right: auto;
+}
+div.controls
+{   
+
+    width: 550px;
+    height: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    background: #333339;  
+}
+div.controls>*
+{
+    height: 30px;
+    width: 40px;
+    display: block;
+    float:left;
+    cursor: pointer;
+    background: #333339;
+}
+
+div#play, div#pause
+{
+    width: 50px;
+}
+
+div#play
+{
+    background: #333339 no-repeat url('../images/player-controls.png');
+    background-position-x: -32px;
+}
+
+
+div#play:hover, div#pause:hover, 
+div#quality:hover, div#volume:hover
+{
+    -webkit-box-shadow: inset 0 0 10px #ffffff;
+}
+
+div#pause
+{   
+    display:none;
+    background: #333339 no-repeat url('../images/player-controls.png');
+    background-position-x: -115px;
+}
+
+div#quality
+{    
+    background: #333339 no-repeat url('../images/player-controls.png');
+    background-position-x: -200px;
+    float: right;
+}
+
+div#volume
+{
+    width: auto;    
+    float: right;
+}
+
+div#volume #volume-icon
+{
+    background: no-repeat url('../images/player-controls.png');
+    background-position-x: -240px;
+    float: left;
+    height: 100%;
+    width: 40px;
+}
+
+div#volume #volume-slider
+{
+    width: 0px;
+    height: 100%;
+    float: left;
+    transition: width .2s;
+}
+
+div#volume:hover #volume-slider
+{
+    width: 150px;
+}
+
+div#time
+{
+    width: auto;
+    padding: 0px 10px;
+    float: right;
+}
+
+div#time > div
+{
+    float: left;
+}
+
+div#time #time-delimiter
+{
+    font-size: 25px;
+    padding: 0px 8px;
+    color: #888888;
+}
+div#time #time-total
+{
+    font-size: 18px;
+    padding-top: 5px;
+    color: #aaaaaa;
+}
+    div#time #time-stats
+    {
+        text-align: right;
+        font-size: 14px;
+        padding-top: 1px;
+    }
+
+ div#time #time-remaining
+    {
+        font-size: 10px;
+        margin-top: -1px;
+        color: #888888;
+    }
+
+#progressbar
+{
+    width: 100%;
+    height: 6px;
+    margin-bottom: 2px;
+    -webkit-transition: height 1s, margin-top 1s;
+    background: #444449;
+    display: inline-block;
+    position: relative;
+}
+
+#progressbar:hover
+{
+    height: 16px;
+    margin-top: -10px;
+}
+
+#progressbar DIV
+{
+    border: 0px;    
+    border-radius: 0px;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: transparent;
+}
+#progressbar #progressbar-preloaded
+{
+    background: #666666;    
+    border-radius: 0px;
+}
+#progressbar #progressbar-playing
+{
+    background: #0082E0;    
+    border-radius: 0px;
 }
