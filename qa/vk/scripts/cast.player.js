@@ -15,16 +15,58 @@
                     timeCurrent: $("#time-current"),
                     timeTotal: $("#time-total"),
                     progressPreloaded: $("#progressbar-preloaded"),
-                    progressPlaying: $("#progressbar-playing")
+                    progressPlaying: $("#progressbar-playing"),
+                    progressNewPosition: $("#progressbar-new-position-bar"),
+                    volumeIcon: $("#volume #volume-icon"),
+                    volumeSlider: $("#volume #volume-slider")
                 }
 
                 /*
                     INITIALIZE CONTROLS
                 */
 
-                self.setPreloadedProgress(0);
-                self.setPlayingProgress(0);
-               
+                $("#video-area").tooltip({
+                    position: {
+                        my: "center bottom",
+                        at: "center top-10",
+                        within: "#video-area"
+                    }
+                });
+
+                self.html.progressNewPosition.tooltip({
+                    position: {
+                        my: "center bottom",
+                        at: "center bottom-20",
+                        within: "#video-area"
+                    }
+                });
+
+                self.html.volumeSlider.slider({range: "min"});
+
+                self.setPreloadedProgress(0,1);
+                self.setPlayingProgress(0, 1);
+
+                self.html.progressNewPosition.on("mousemove", function (e) {
+                    var duration = self.player.getDuration();
+                    if (isNaN(duration)) {
+                        self.html.progressNewPosition.tooltip("close");
+                        return;
+                    }
+                    self.html.progressNewPosition.css("background-position-x", e.offsetX - 2);
+                    self.html.progressNewPosition.tooltip("open");
+                    self.html.progressNewPosition.tooltip("option", "content", self.getPlayerDisplayTime(e.offsetX / self.html.progressNewPosition.width() * duration));
+                });
+                self.html.progressNewPosition.on("mouseout", function (e) {
+                    self.html.progressNewPosition.css("background-position-x", "-10px");
+                });
+                self.html.progressNewPosition.on("click", function (e) {
+                    var duration = self.player.getDuration();
+                    if (isNaN(duration)) {
+                        return;
+                    }
+                    var value = e.offsetX / self.html.progressNewPosition.width() * duration;
+                    self.player.setCurrent(value);
+                });
 
                 /*
                     REGISTER EVENTS FROM CONTROLS
@@ -39,6 +81,37 @@
                     self.pauseClickHandler(e);
                 });
 
+                self.html.volumeIcon.on("click", function (e) {
+                    self.player.toggleMuted();
+                });
+
+                self.html.volumeSlider.on( "slide", function( event, ui ) {
+                    self.player.setVolume(ui.value / 100);
+                } );
+
+                $(document).on("keypress", function (e) {
+                    if (e.which == 32 || e.which == 13) {
+                        if (self.html.play.is(":visible")) {
+                            self.html.play.click();
+                        }
+                        else {
+                            self.html.pause.click();
+                        }
+                    }
+                });
+
+                $(document).on("keydown", function (e) {
+                    var handler = {
+                        "35": function end() { },
+                        "36": function home() { },
+                        "37": function right() { },
+                        "38": function up() { },
+                        "39": function left() { },
+                        "40": function down() { },
+                    };
+
+                    var key = e.which;
+                });
                 /*
                     REGISTER EVENTS FROM PLAYER
                 */
@@ -71,6 +144,15 @@
 
                 self.player.ondurationchanged(updateTimeControls);
                 self.player.onplayingtimechanged(updateTimeControls);
+                self.player.onpreloadedchanged(updateTimeControls);
+
+                self.player.onvolumechanged(function (e) {
+                    var volume = self.player.getVolume() * 100;
+                    var muted = self.player.getMuted();
+                    self.setVolume(volume, muted);
+                });
+
+
             },
 
             updateRemainingTime: function () {
@@ -107,6 +189,15 @@
             },
             setPreloadedProgress: function (value, max) {
                 this.html.progressPreloaded.css("width", value / max * 100 + "%");
+            },
+            setVolume: function (value, muted) {
+                var volume = muted ? 0 : value;
+                
+                var cssClass = "icon-" + Math.ceil(volume / 25);
+
+                this.html.volumeSlider.slider("value", volume);
+                this.html.volumeIcon.prop("className", cssClass);
+
             }
         };
     };
@@ -128,6 +219,10 @@
                 return this.html.player.currentTime;
             },
 
+            setCurrent: function (value) {
+                this.html.player.currentTime = value;
+            },
+
             getPreloaded: function () {
                 var current = this.html.player.currentTime;
                 var buffered = this.html.player.buffered;
@@ -138,7 +233,18 @@
                 }
                 return 0;
             },
-
+            getVolume: function () {
+                return this.html.player.volume;
+            },
+            setVolume: function (volume) {
+                this.html.player.volume = volume;
+            },
+            getMuted: function () {
+                return this.html.player.muted;
+            },
+            toggleMuted: function () {
+                this.html.player.muted = !this.html.player.muted;
+            },
             // Actions
 
             play: function () {
@@ -160,12 +266,13 @@
                 this.html.$player.on("durationchange", handler);
             },
             onpreloadedchanged: function (handler) {
-                this.html.$player.on("progress", handler);
+                this.html.$player.on("progress",handler);
             },
             onplayingtimechanged: function (handler) {
                 this.html.$player.on("timeupdate", handler);
             },
             onvolumechanged: function (handler) {
+                this.html.$player.on("volumechange loadedmetadata", handler);
             }
         };
 

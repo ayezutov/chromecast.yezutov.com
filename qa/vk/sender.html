@@ -60,13 +60,7 @@
             }
         };
     </script>
-
-    <script>
-        $(document).ready(function () {
-
-        });
-    </script>
-</head>
+  </head>
 <body>
 
     <header>
@@ -86,27 +80,27 @@
                         <div role="progressbar" id="progressbar">
                             <div role="progressbar" id="progressbar-preloaded"></div>
                             <div role="progressbar" id="progressbar-playing"></div>
+                            <div role="progressbar" id="progressbar-new-position-bar" title="Click to select time"></div>
                         </div>
-                        <div role="button" id="play"></div>
-                        <div role="button" id="pause"></div>
+                        <div role="button" id="play" title="Play the video"></div>
+                        <div role="button" id="pause" title="Pause the video"></div>
                         
-                        <div role="button" id="quality"></div>
+                        <div role="button" id="quality" title="Change video quality"></div>
                         <div id="volume">
-                            <div role="button" id="volume-icon"></div>
-                            <div role="slider" id="volume-slider"></div>
+                            <div role="button" id="volume-icon" title="Mute"></div>
+                            <div id="volume-slider" role="slider">
+                            </div>
                         </div>  
                         <div role="status" id="time">
                             <div id="time-stats">
-                                <div id="time-current">&nbsp;</div>
-                                <div id="time-remaining">&nbsp;</div>
+                                <div id="time-current" title="Current position">&nbsp;</div>
+                                <div id="time-remaining" title="Remaining time">&nbsp;</div>
                             </div>
                             <div id="time-delimiter">/</div>
-                            <div id="time-total">&nbsp;</div>                            
+                            <div id="time-total" title="Total video length">&nbsp;</div>                            
                         </div>                      
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
