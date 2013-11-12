@@ -101,16 +101,38 @@
                 });
 
                 $(document).on("keydown", function (e) {
+
+                    var volumeDelta = 0.05;
+                    var timeDelta = 1;
+
                     var handler = {
-                        "35": function end() { },
-                        "36": function home() { },
-                        "37": function right() { },
-                        "38": function up() { },
-                        "39": function left() { },
-                        "40": function down() { },
+                        "35": function end() {
+                            self.player.setCurrent(self.player.getDuration());
+                        },
+                        "36": function home() {
+                            self.player.setCurrent(0);
+                        },
+                        "37": function left() {
+                            var newCurrent = self.player.getCurrent() - timeDelta;
+                            newCurrent = newCurrent < 0 ? 0 : newCurrent;
+                            self.player.setCurrent(newCurrent);
+                        },
+                        "38": function up() {
+                            self.player.setVolume(self.player.getVolume() + volumeDelta);
+                        },
+                        "39": function right() {
+                            self.player.setCurrent(self.player.getCurrent() + timeDelta);
+                        },
+                        "40": function down() {
+                            self.player.setVolume(self.player.getVolume() - volumeDelta);
+                        },
                     };
 
                     var key = e.which;
+
+                    if (handler.hasOwnProperty(key)) {
+                        handler[key](e);
+                    }
                 });
                 /*
                     REGISTER EVENTS FROM PLAYER
