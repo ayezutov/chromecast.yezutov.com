@@ -1,8 +1,7 @@
 (function () {
-
+    window.vkCast = window.vkCast || {};
     
-    
-    var PlayerControls = function (player) {
+    var PlayerControls = window.vkCast.PlayerControls = function (player) {
         return {
             init: function () {
                 var self = this;
@@ -18,7 +17,10 @@
                     progressPlaying: $("#progressbar-playing"),
                     progressNewPosition: $("#progressbar-new-position-bar"),
                     volumeIcon: $("#volume #volume-icon"),
-                    volumeSlider: $("#volume #volume-slider")
+                    volumeSlider: $("#volume #volume-slider"),
+                    qualityIcon: $("#quality"),
+                    qualityPopup: $("#quality-formats"),
+                    qualityPopupList: $("#quality-formats ul")
                 }
 
                 /*
@@ -87,7 +89,15 @@
 
                 self.html.volumeSlider.on( "slide", function( event, ui ) {
                     self.player.setVolume(ui.value / 100);
-                } );
+                });
+
+                self.html.qualityPopupList.click(function (e) {
+                    var $target = $(e.target);
+                    if ($target.is("a") && !$target.closest("li").is(".selected")) {
+                        self.startPlayback($target.text());
+                    }
+                    e.preventDefault();
+                });
 
                 $(document).on("keypress", function (e) {
                     if (e.which == 32 || e.which == 13) {
@@ -138,15 +148,22 @@
                     REGISTER EVENTS FROM PLAYER
                 */
 
-                self.player.onplay(function (e) {
-                    self.html.play.hide();
-                    self.html.pause.show();
-                });
+                var showPlayPause = function () {
+                    var paused = self.player.getIsPaused();
+                    if (paused) {
+                        self.html.pause.hide();
+                        self.html.play.show();
+                    }
+                    else {
+                        self.html.pause.show();
+                        self.html.play.hide();
+                    }
+                }
 
-                self.player.onpause(function (e) {
-                    self.html.pause.hide();
-                    self.html.play.show();
-                });
+                self.player.onplay(showPlayPause);
+                self.player.onpause(showPlayPause);
+                self.player.onloadstart(showPlayPause);
+                
 
                 var updateTimeControls = function (e) {
                     var duration = self.player.getDuration();
@@ -220,6 +237,47 @@
                 this.html.volumeSlider.slider("value", volume);
                 this.html.volumeIcon.prop("className", cssClass);
 
+            },
+
+            reinitializeQualities: function (qualities) {
+                this.html.qualityPopupList.empty();
+                for (prop in qualities) {
+                    this.html.qualityPopupList.append($("<li></li>").append($("<a href='#'></a>").text(prop).prop("data-video-url", qualities[prop])));
+                }
+            },
+
+            /* External calls */
+            changeTrack: function (parameters) {
+                this.currentParameters = parameters;
+                this.reinitializeQualities(parameters.qualities);
+                if (!!parameters.cover) {
+                    this.player.setCover(parameters.cover);
+                };
+                this.startPlayback(360, true);
+            },
+            startPlayback: function (quality, autoplay) {
+                var parameters = this.currentParameters;
+                quality = parseInt(quality, 10);
+                if (!parameters.qualities.hasOwnProperty(quality)) {
+                    var allQualities = $.map(parameters.qualities, function (value, key) {
+                        var v = parseInt(key, 10);
+                        return { quality: v, diffAbs: Math.abs(v - quality), abs: v - quality };
+                    }).sort(function (x, y) {
+                        return x.diffAbs > y.diffAbs || (x.diffAbs == y.diffAbs && x.abs < y.abs);
+                    });
+                    quality = allQualities[0];
+                }
+
+                this.html.qualityPopupList.find("li").removeClass("selected");
+                this.html.qualityPopupList.find("li").filter(function () {
+                    return $(this).text() == quality;
+                }).addClass("selected");
+
+                this.player.setSource(parameters.qualities[quality]);
+
+                if (autoplay) {
+                    this.player.play();
+                }
             }
         };
     };
@@ -267,8 +325,22 @@
             toggleMuted: function () {
                 this.html.player.muted = !this.html.player.muted;
             },
-            // Actions
 
+            setSource: function (url) {
+                this.html.player.src = url;
+                this.html.player.load();
+            },
+
+            getIsPaused: function () {
+                return this.html.player.paused;
+            },
+
+            setCover: function(url){
+                this.html.player.poster = url;
+            },
+
+            // Actions
+            
             play: function () {
                 this.html.player.play();
             },
@@ -283,6 +355,9 @@
             },
             onplay: function (handler) {
                 this.html.$player.on("play", handler);
+            },
+            onloadstart: function (handler) {
+                this.html.$player.on("loadstart", handler);
             },
             ondurationchanged: function (handler) {
                 this.html.$player.on("durationchange", handler);

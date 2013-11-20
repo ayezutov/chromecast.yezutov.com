@@ -1,9 +1,38 @@
 <html>
+<head>
+    <script type="text/javascript" src="scritps/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/cast/js/receiver/1.0/cast_receiver.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
 
-<body>
+            var receiver = new cast.receiver.Receiver("a52262d5-42d0-4ca0-8ce0-b3dda0e630f3", ['player']);
+            var channelHandler = new cast.receiver.ChannelHandler('player');
+            channelHandler.addChannelFactory(receiver.createChannelFactory('player'));
 
-<h1>VK area</h1>
-<h2>QA</h2>
+            receiver.start();
+
+            channelHandler.addEventListener(cast.receiver.Channel.EventType.MESSAGE, onMessage.bind(this));
+            RegExp.escape= function(s) {
+                return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+            };
+            function onMessage(event) {
+                if (event.message.command == "ensureUrl") {
+                    if (new RegExp("\\\/" + RegExp.escape(window.location.host) + "\\\/").test(event.message.parameters.url)) {
+                        window.location = event.message.parameters.url;
+                    }
+                }
+            }
+
+        });
+    </script>
+</head>
+
+<body style="margin:0px">
+
+<video style="width: 100%; height: 100%" id="html5player" poster="http://corrupt-system.de/assets/media/sintel/sintel-trailer.jpg" controls preload="none">
+        <source src="http://corrupt-system.de/assets/media/sintel/sintel-trailer.m4v" type="video/mp4"  />
+        <source src="http://corrupt-system.de/assets/media/sintel/sintel-trailer.webm" type="video/webm"  />
+    </video>
 
 </body>
 </html>

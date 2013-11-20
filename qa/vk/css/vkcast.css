@@ -92,19 +92,6 @@ div#pause
     background-position-x: -115px;
 }
 
-div#quality
-{    
-    background: #333339 no-repeat url('../images/player-controls.png');
-    background-position-x: -200px;
-    float: right;
-}
-
-
-/*div#volume:hover #volume-slider
-{
-    width: 150px;
-}*/
-
 div#time
 {
     width: auto;
@@ -257,4 +244,78 @@ div#volume-slider .ui-slider-handle.ui-state-focus, div#volume-slider .ui-slider
 #volume #volume-icon.icon-4
 {
     background-position-x: -400px;
+}
+
+#quality
+{    
+    background: #333339 no-repeat url('../images/player-controls.png');
+    background-position-x: -200px;
+    float: right;
+    position: relative;
+}
+
+#quality #quality-formats
+{
+    width: 70px;
+    position: absolute;
+    bottom: 30px;
+    right: 0px;
+    padding: 5px 10px;
+    display:none;
+    cursor: auto;
+
+    border: 1px solid white;
+    background: rgba(20, 20, 20, 1);
+    color: white;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 12px;
+}
+
+#quality:hover #quality-formats
+{
+    display:block;
+}
+
+#quality #quality-formats ul, #quality #quality-formats li
+{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+}
+
+    #quality #quality-formats li
+    {
+        height: 25px;
+    }
+
+    #quality #quality-formats span
+    {
+        line-height: 30px;
+    }
+
+#quality #quality-formats li a, #quality #quality-formats li a:hover, #quality #quality-formats li a:visited
+{
+    color: white;
+    text-decoration: none;
+    display: block;
+    line-height: 25px;
+    height: 100%;
+    width:100%;
+}
+
+#quality #quality-formats li:hover
+{
+    background-color: rgba(60, 60, 60, 1);
+}
+
+#quality #quality-formats li.selected, #quality #quality-formats li:hover.selected
+{
+    background: rgba(90, 90, 90, 1);
+    border: 1px solid white;
+}
+
+.receiverSelectorDialog .ui-dialog-titlebar
+{
+    display: none;
 }
