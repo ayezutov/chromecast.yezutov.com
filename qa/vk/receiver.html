@@ -17,7 +17,7 @@
             };
             function onMessage(event) {
                 console.log("On message: ");
-                console.log(message);
+                console.log(event.message);
                 if (event.message.command == "ensureUrl") {
                     if (!new RegExp("\\\/" + RegExp.escape(window.location.host) + "\\\/").test(event.message.parameters.url)) {
                         window.location.href = event.message.parameters.url;
