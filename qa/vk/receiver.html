@@ -16,9 +16,11 @@
                 return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
             };
             function onMessage(event) {
+                console.log("On message: ");
+                console.log(message);
                 if (event.message.command == "ensureUrl") {
-                    if (new RegExp("\\\/" + RegExp.escape(window.location.host) + "\\\/").test(event.message.parameters.url)) {
-                        window.location = event.message.parameters.url;
+                    if (!new RegExp("\\\/" + RegExp.escape(window.location.host) + "\\\/").test(event.message.parameters.url)) {
+                        window.location.href = event.message.parameters.url;
                     }
                 }
             }
