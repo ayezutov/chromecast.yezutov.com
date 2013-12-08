@@ -1,4 +1,4 @@
-<html data-cast-api-enabled="true">
+﻿<html data-cast-api-enabled="true">
 <head>
     <script src="scripts/jquery-1.9.1.js"></script>
     <script src="scripts/jquery-ui-1.10.3.custom.min.js"></script>
@@ -19,6 +19,9 @@
             player.init();
             window.playerControls = new window.vkCast.PlayerControls(player);
             window.playerControls.init();
+
+            var parameters = JSON.parse('{"_raw":{"add_hash":"91219ec0550666fd57","added":"1","angle":"0","can_rotate":"1","dbg_on":"0","goto_orig_video":"Перейти к видеозаписи","hash2":"0ca1fc9032230190","hash":"fe6b8e4c795ceeb1f926ced840a4f968","hd":"3","hd_def":"-1","host":"514205","img_angle":"0","ip_subm":"1","is_ext":"0","is_vk":"1","jpg":"http://cs514205.vk.me/u221329256/video/l_f9bca046.jpg","lang_add":"Добавить к себе","lang_added":"Добавлено к себе","lang_ads":"Реклама","lang_ads_link":"Сайт рекламодателя","lang_ads_skip":"Пропустить рекламу","lang_ads_skip_time":"Пропустить рекламу через {time}","lang_fullscreen":"На весь экран","lang_hdsd":"Сменить качество","lang_like":"Мне нравится","lang_report_problem":"Сообщить о проблеме...","lang_rotate":"Повернуть","lang_share":"Рассказать друзьям","lang_volume":"Громкость","lang_volume_off":"Убрать звук","lang_volume_on":"Включить звук","lang_window":"Свернуть","liked":"0","ltag":"l_f9bca046","md_author":"Александр Езутов","md_title":" Дом войны (2012) ","no_flv":"1","nologo":"1","oid":"3231465","puid1":"2","puid22":"14","puid37":"2","puid38":"","referrer":"","repeat":"0","show_ads":"0","t":"","uid":"221329256","url240":"http://cs514205v4.vk.me/u221329256/videos/0a1a931b27.240.mp4","url360":"http://cs514205v4.vk.me/u221329256/videos/0a1a931b27.360.mp4","url480":"http://cs514205v4.vk.me/u221329256/videos/0a1a931b27.480.mp4","url720":"http://cs514205v4.vk.me/u221329256/videos/0a1a931b27.720.mp4","vid":"166891784","video_get_current_url":"Копировать ссылку на кадр","video_get_video_code":"Копировать код видео","video_load_error":"Видеофайл еще не загрузился или сервер с видеофайлом временно недоступен","video_play_hd":"Смотреть в высоком качестве","video_player_author":"Автор плеера - Алексей Харьков","video_player_version":"ВКонтакте видео плеер ","video_stop_loading":"Остановить загрузку","vkid":"166601699","vtag":"0a1a931b27"},"qualities":{"240":"http://cs514205v4.vk.me/u221329256/videos/0a1a931b27.240.mp4","360":"http://cs514205v4.vk.me/u221329256/videos/0a1a931b27.360.mp4","480":"http://cs514205v4.vk.me/u221329256/videos/0a1a931b27.480.mp4","720":"http://cs514205v4.vk.me/u221329256/videos/0a1a931b27.720.mp4"},"cover":"http://cs514205.vk.me/u221329256/video/l_f9bca046.jpg"}');
+            setTimeout(function(){window.playerAddTrack(parameters)}, 500);
         });
     </script>
   </head>

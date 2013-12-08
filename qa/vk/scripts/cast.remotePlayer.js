@@ -8,7 +8,7 @@
 
        
         doLaunch = function (receiver) {
-            var request = new window.cast.LaunchRequest("a52262d5-42d0-4ca0-8ce0-b3dda0e630f3", receiver);
+            var request = new window.cast.LaunchRequest("a52262d5-42d0-4ca0-8ce0-b3dda0e630f3_1", receiver);
             request.parameters = "v=abcdefg";
             //...
             request.description = new window.cast.LaunchDescription();
@@ -47,6 +47,7 @@
                     var self = this;
                     this.forSelectedReceiver(function (receiver) {
                         var request = new window.cast.LaunchRequest(self.applicationId, receiver);
+                        request.parameters = "v=abcdefg";
                         //...
                         //request.description = new window.cast.LaunchDescription();
                         //request.description.text = "My Cat Video";
@@ -57,7 +58,11 @@
                                 var cv_activity = activity;
                                 // update UI to reflect that the receiver has received the
                                 // launch command and should start video playback.
-                                self.api.sendMessage(cv_activity.activityId, 'player', { command: "ensureUrl", parameters: {url:"http://192.168.1.4/qa/vk/receiver.html"} });
+                                // self.api.sendMessage(cv_activity.activityId, 'player', { command: "ensureUrl", parameters: {url:"http://192.168.1.4/qa/vk/receiver.html"} });
+
+                                window.castMessage = function (m) {
+                                    self.api.sendMessage(cv_activity.activityId, 'player', m);
+                                }
 
                             } else if (activity.status == "error") {
                                 //cv_activity = null;

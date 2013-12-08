@@ -1,30 +1,63 @@
 <html>
 <head>
     <script type="text/javascript" src="scripts/jquery-1.9.1.js"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/cast/js/receiver/1.0/cast_receiver.js"></script>
+    <!--script type="text/javascript" src="https://www.gstatic.com/cast/js/receiver/1.0/cast_receiver.js"></script>-->
     <script type="text/javascript">
-        $(document).ready(function () {
 
-            var receiver = new cast.receiver.Receiver("a52262d5-42d0-4ca0-8ce0-b3dda0e630f3_1", ['player']);
-            var channelHandler = new cast.receiver.ChannelHandler('player');
-            channelHandler.addChannelFactory(receiver.createChannelFactory('player'));
-
-            receiver.start();
-
-            channelHandler.addEventListener(cast.receiver.Channel.EventType.MESSAGE, onMessage.bind(this));
-            RegExp.escape= function(s) {
-                return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
-            };
-            function onMessage(event) {
-                console.log("On message: ");
-                console.log(event.message);
-                if (event.message.command == "ensureUrl") {
-                    if (!new RegExp("\\\/" + RegExp.escape(window.location.host) + "\\\/").test(event.message.parameters.url)) {
-                        window.location.href = event.message.parameters.url;
+        function tryLoadSettingsFromLocalAddress(pcNumber, limit, success, failure) {
+            $.getJSON("http://192.168.1." + pcNumber + "/qa/vk/RedirectSettings.aspx")
+                .done(function (d) {
+                    success(d);
+                })
+                .fail(function () {
+                    if (pcNumber >= limit) {
+                        failure();
                     }
-                }
-            }
+                    else {
+                        tryLoadSettingsFromLocalAddress(pcNumber + 1, limit, success, failure);
+                    }
+                });
+        }
 
+        function loadReceiver() {
+
+            var script = document.createElement("script");
+            script.src = "https://www.gstatic.com/cast/js/receiver/1.0/cast_receiver.js";
+
+            document.appendChild(script);
+
+            setTimeout(function () {
+                var receiver = new cast.receiver.Receiver("a52262d5-42d0-4ca0-8ce0-b3dda0e630f3_1", ['player', cast.receiver.RemoteMedia.NAMESPACE]);
+                var channelHandler = new cast.receiver.ChannelHandler('player');
+                channelHandler.addChannelFactory(receiver.createChannelFactory('player'));
+
+                var remoteMedia = new cast.receiver.RemoteMedia();
+                remoteMedia.addChannelFactory(receiver.createChannelFactory(cast.receiver.RemoteMedia.NAMESPACE));
+
+                receiver.start();
+
+                remoteMedia.setMediaElement($("#html5player"));
+
+                channelHandler.addEventListener(cast.receiver.Channel.EventType.MESSAGE, onMessage.bind(this));
+                function onMessage(event) {
+                    console.log("On message: ");
+                    console.log(event.message);
+                }
+            }, 10);
+        }
+
+        $(document).ready(function () {            
+            tryLoadSettingsFromLocalAddress(2, 6, function (settings) {
+                if (settings.enabled && settings.url.indexOf(window.location.origin) < 0) {
+                    window.location.href = settings.url;
+                }
+                else {
+                    loadReceiver();
+                }
+            },
+            function () {
+                loadReceiver();
+            });
         });
     </script>
 </head>
