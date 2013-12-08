@@ -1,7 +1,7 @@
 <html>
 <head>
     <script type="text/javascript" src="scripts/jquery-1.9.1.js"></script>
-    <!--script type="text/javascript" src="https://www.gstatic.com/cast/js/receiver/1.0/cast_receiver.js"></script>-->
+    <script type="text/javascript" src="https://www.gstatic.com/cast/js/receiver/1.0/cast_receiver.js"></script>
     <script type="text/javascript">
 
         function tryLoadSettingsFromLocalAddress(pcNumber, limit, success, failure) {
@@ -21,10 +21,10 @@
 
         function loadReceiver() {
 
-            var script = document.createElement("script");
-            script.src = "https://www.gstatic.com/cast/js/receiver/1.0/cast_receiver.js";
+            //var script = document.createElement("script");
+            //script.src = "https://www.gstatic.com/cast/js/receiver/1.0/cast_receiver.js";
 
-            document.appendChild(script);
+            //document.head.appendChild(script);
 
             setTimeout(function () {
                 var receiver = new cast.receiver.Receiver("a52262d5-42d0-4ca0-8ce0-b3dda0e630f3_1", ['player', cast.receiver.RemoteMedia.NAMESPACE]);
@@ -38,18 +38,20 @@
 
                 remoteMedia.setMediaElement($("#html5player"));
 
-                channelHandler.addEventListener(cast.receiver.Channel.EventType.MESSAGE, onMessage.bind(this));
-                function onMessage(event) {
+                var onMessage = function (event) {
                     console.log("On message: ");
                     console.log(event.message);
-                }
-            }, 10);
+                };
+
+                channelHandler.addEventListener(cast.receiver.Channel.EventType.MESSAGE, onMessage.bind(this));
+                
+            }, 100);
         }
 
         $(document).ready(function () {            
             tryLoadSettingsFromLocalAddress(2, 6, function (settings) {
                 if (settings.enabled && settings.url.indexOf(window.location.origin) < 0) {
-                    window.location.href = settings.url;
+                    window.location.href = settings.url + "?rand=" + Math.random()*100000;
                 }
                 else {
                     loadReceiver();
