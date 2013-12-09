@@ -5,7 +5,11 @@
     <script type="text/javascript">
 
         function tryLoadSettingsFromLocalAddress(pcNumber, limit, success, failure) {
-            $.getJSON("http://192.168.1." + pcNumber + "/qa/vk/RedirectSettings.aspx")
+            $.ajax("http://192.168.1." + pcNumber + "/qa/vk/RedirectSettings.aspx",
+                {
+                    dataType: "json",
+                    timeout: 500
+                })
                 .done(function (d) {
                     success(d);
                 })
@@ -36,7 +40,7 @@
 
                 receiver.start();
 
-                remoteMedia.setMediaElement($("#html5player"));
+                remoteMedia.setMediaElement($("#html5player")[0]);
 
                 var onMessage = function (event) {
                     console.log("On message: ");
